@@ -7,7 +7,10 @@ class Camera:
 
     def __init__(self):
 
-        self.camera = cv2.VideoCapture(0)
+        self.cap = cv2.VideoCapture(0)
+
+        if not self.cap.isOpened():
+            raise Exception("Cannot open webcam.")
 
         self.detector = HandDetector()
 
@@ -15,7 +18,7 @@ class Camera:
 
         while True:
 
-            success, frame = self.camera.read()
+            success, frame = self.cap.read()
 
             if not success:
                 break
@@ -24,9 +27,10 @@ class Camera:
 
             cv2.imshow("VisionPresenter", frame)
 
-            if cv2.waitKey(1) & 0xFF == ord("q"):
+            key = cv2.waitKey(1)
+
+            if key == ord("q"):
                 break
 
-        self.camera.release()
-
+        self.cap.release()
         cv2.destroyAllWindows()
